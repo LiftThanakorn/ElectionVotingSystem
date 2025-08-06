@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบนับคะแนนเลือกตั้ง</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        danger: '#EF4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b-4 border-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary">🗳️ ระบบนับคะแนนเลือกตั้ง</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="newElectionBtn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md">
+                        + สร้างการเลือกตั้งใหม่
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Welcome Section -->
+        <div id="welcomeSection" class="text-center mb-12 fade-in">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">ยินดีต้อนรับสู่ระบบนับคะแนนเลือกตั้ง</h2>
+            <p class="text-xl text-gray-600 mb-8">จัดการการเลือกตั้งและนับคะแนนแบบ Real-time</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">นับคะแนนแบบ Real-time</h3>
+                    <p class="text-gray-600">ติดตามผลคะแนนได้ทันทีที่มีการลงคะแนน</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-4xl mb-4">👥</div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">จัดการผู้สมัคร</h3>
+                    <p class="text-gray-600">เพิ่ม แก้ไข และจัดการข้อมูลผู้สมัครได้ง่าย</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-4xl mb-4">🏛️</div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">หลายการเลือกตั้ง</h3>
+                    <p class="text-gray-600">สร้างและจัดการการเลือกตั้งหลายรายการพร้อมกัน</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Elections List -->
+        <div id="electionsSection" class="mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">การเลือกตั้งทั้งหมด</h3>
+            <div id="electionsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Elections will be dynamically loaded here -->
+            </div>
+            <div id="noElections" class="text-center py-12 bg-white rounded-xl shadow-lg">
+                <div class="text-6xl mb-4">🗳️</div>
+                <h4 class="text-xl font-semibold text-gray-600 mb-2">ยังไม่มีการเลือกตั้ง</h4>
+                <p class="text-gray-500 mb-6">เริ่มต้นด้วยการสร้างการเลือกตั้งใหม่</p>
+                <button onclick="showCreateElectionModal()" class="bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                    สร้างการเลือกตั้งแรก
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Election Modal -->
+    <div id="createElectionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-95">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">สร้างการเลือกตั้งใหม่</h3>
+            <form id="createElectionForm">
+                <div class="mb-4">
+                    <label for="electionName" class="block text-sm font-medium text-gray-700 mb-2">ชื่อการเลือกตั้ง</label>
+                    <input type="text" id="electionName" name="electionName" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                           placeholder="เช่น การเลือกตั้งประธานนักเรียน 2567">
+                </div>
+                <div class="mb-6">
+                    <label for="electionDescription" class="block text-sm font-medium text-gray-700 mb-2">คำอธิบาย (ไม่บังคับ)</label>
+                    <textarea id="electionDescription" name="electionDescription" rows="3"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                              placeholder="รายละเอียดเพิ่มเติมเกี่ยวกับการเลือกตั้ง"></textarea>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="hideCreateElectionModal()" 
+                            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200">
+                        ยกเลิก
+                    </button>
+                    <button type="submit" 
+                            class="bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                        สร้างการเลือกตั้ง
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Election Management Page -->
+    <div id="electionManagementPage" class="hidden">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <button onclick="showMainPage()" class="text-primary hover:text-blue-600 font-medium mb-2 transition-colors duration-200">
+                        ← กลับหน้าหลัก
+                    </button>
+                    <h2 id="currentElectionTitle" class="text-3xl font-bold text-gray-800"></h2>
+                    <p id="currentElectionDescription" class="text-gray-600 mt-2"></p>
+                </div>
+                <div class="flex space-x-4">
+                    <button id="addCandidateBtn" class="bg-secondary hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                        + เพิ่มผู้สมัคร
+                    </button>
+                    <button id="startVotingBtn" class="bg-accent hover:bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                        เริ่มการลงคะแนน
+                    </button>
+                </div>
+            </div>
+
+            <!-- Candidates Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">ผู้สมัครทั้งหมด</h3>
+                <div id="candidatesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Candidates will be dynamically loaded here -->
+                </div>
+                <div id="noCandidates" class="text-center py-8">
+                    <div class="text-4xl mb-4">👤</div>
+                    <p class="text-gray-500 mb-4">ยังไม่มีผู้สมัคร</p>
+                    <button onclick="showAddCandidateModal()" class="bg-secondary hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200">
+                        เพิ่มผู้สมัครคนแรก
+                    </button>
+                </div>
+            </div>
+
+            <!-- Voting Section -->
+            <div id="votingSection" class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">การลงคะแนน</h3>
+                <div id="votingArea" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        <div id="votingCandidates" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Voting candidates will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="endVotingBtn" class="bg-danger hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200">
+                            สิ้นสุดการลงคะแนน
+                        </button>
+                    </div>
+                </div>
+                <div id="votingNotStarted" class="text-center py-8">
+                    <div class="text-4xl mb-4">⏳</div>
+                    <p class="text-gray-500 mb-4">การลงคะแนนยังไม่เริ่ม</p>
+                    <p class="text-sm text-gray-400">กดปุ่ม "เริ่มการลงคะแนน" เพื่อเริ่มต้น</p>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="bg-white rounded-xl shadow-lg p-6 mt-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">ผลคะแนน (Real-time)</h3>
+                <div id="resultsArea">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Candidate Modal -->
+    <div id="addCandidateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-95">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">เพิ่มผู้สมัคร</h3>
+            <form id="addCandidateForm">
+                <div class="mb-4">
+                    <label for="candidateName" class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้สมัคร</label>
+                    <input type="text" id="candidateName" name="candidateName" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                           placeholder="ชื่อ-นามสกุล">
+                </div>
+                <div class="mb-4">
+                    <label for="candidateNumber" class="block text-sm font-medium text-gray-700 mb-2">หมายเลขผู้สมัคร</label>
+                    <input type="number" id="candidateNumber" name="candidateNumber" required min="1"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                           placeholder="เช่น 1, 2, 3">
+                </div>
+                <div class="mb-6">
+                    <label for="candidateParty" class="block text-sm font-medium text-gray-700 mb-2">พรรค/กลุ่ม (ไม่บังคับ)</label>
+                    <input type="text" id="candidateParty" name="candidateParty"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                           placeholder="ชื่อพรรคหรือกลุ่ม">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="hideAddCandidateModal()" 
+                            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200">
+                        ยกเลิก
+                    </button>
+                    <button type="submit" 
+                            class="bg-secondary hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                        เพิ่มผู้สมัคร
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
