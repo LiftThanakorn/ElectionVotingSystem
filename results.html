@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผลคะแนนเลือกตั้ง (Real-time)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        danger: '#EF4444',
+                        warning: '#F97316'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b-4 border-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-xl md:text-2xl font-bold text-primary">📊 ผลคะแนนเลือกตั้ง (Real-time)</h1>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button onclick="goBack()" class="bg-primary hover:bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md text-sm md:text-base">
+                        ← กลับหน้าหลัก
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 md:py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Election Info -->
+        <div id="electionInfo" class="text-center mb-8 md:mb-10 fade-in">
+            <h2 id="electionTitle" class="text-2xl md:text-3xl font-bold text-gray-800 mb-2"></h2>
+            <p id="electionDescription" class="text-lg text-gray-600 mb-4"></p>
+            <div class="inline-block bg-gray-100 px-4 py-2 rounded-full">
+                <span class="text-sm font-medium text-gray-700">สถานะ: </span>
+                <span id="electionStatus" class="text-sm font-semibold"></span>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="bg-white rounded-xl shadow-lg p-5 md:p-6">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8">
+                <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-0">ผลคะแนน (Real-time)</h3>
+                <div class="text-right">
+                    <div class="text-2xl md:text-3xl font-bold text-primary" id="totalVotes">0</div>
+                    <p class="text-gray-600 text-sm md:text-base">คะแนนรวมทั้งหมด</p>
+                </div>
+            </div>
+            
+            <div id="resultsArea" class="mb-6">
+                <!-- Results will be displayed here -->
+                <div class="text-center py-10">
+                    <div class="text-4xl mb-4">📊</div>
+                    <p class="text-gray-500">กำลังโหลดผลคะแนน...</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <p class="text-sm text-gray-500">ผลคะแนนจะอัปเดตอัตโนมัติทุก 2 วินาที</p>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Results Display System
+        class ResultsDisplay {
+            constructor() {
+                this.elections = JSON.parse(localStorage.getItem('elections')) || [];
+                this.currentElection = null;
+                this.electionId = null;
+                this.init();
+            }
+            
+            init() {
+                // Get election ID from URL parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                this.electionId = urlParams.get('electionId');
+                
+                if (!this.electionId) {
+                    document.getElementById('resultsArea').innerHTML = `
+                        <div class="text-center py-10">
+                            <div class="text-4xl mb-4">❌</div>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-2">ไม่พบการเลือกตั้ง</h4>
+                            <p class="text-gray-500 mb-5">ไม่สามารถแสดงผลคะแนนได้</p>
+                            <button onclick="goBack()" class="bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200">
+                                กลับหน้าหลัก
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Find the election
+                this.currentElection = this.elections.find(e => e.id === this.electionId);
+                
+                if (!this.currentElection) {
+                    document.getElementById('resultsArea').innerHTML = `
+                        <div class="text-center py-10">
+                            <div class="text-4xl mb-4">❌</div>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-2">ไม่พบการเลือกตั้ง</h4>
+                            <p class="text-gray-500 mb-5">ไม่สามารถแสดงผลคะแนนได้</p>
+                            <button onclick="goBack()" class="bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200">
+                                กลับหน้าหลัก
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Display election info
+                document.getElementById('electionTitle').textContent = this.currentElection.name;
+                document.getElementById('electionDescription').textContent = this.currentElection.description || 'ไม่มีคำอธิบาย';
+                document.getElementById('electionStatus').textContent = this.getStatusText(this.currentElection.status);
+                document.getElementById('electionStatus').className = `text-sm font-semibold ${this.getStatusColor(this.currentElection.status)}`;
+                
+                // Load initial results
+                this.loadResults();
+                
+                // Auto-refresh results every 2 seconds
+                setInterval(() => {
+                    this.refreshData();
+                    this.loadResults();
+                }, 2000);
+            }
+            
+            refreshData() {
+                // Refresh elections data from localStorage
+                this.elections = JSON.parse(localStorage.getItem('elections')) || [];
+                this.currentElection = this.elections.find(e => e.id === this.electionId);
+            }
+            
+            loadResults() {
+                if (!this.currentElection) return;
+                
+                const resultsArea = document.getElementById('resultsArea');
+                const totalVotesElement = document.getElementById('totalVotes');
+                
+                if (this.currentElection.candidates.length === 0) {
+                    resultsArea.innerHTML = '<p class="text-gray-500 text-center py-6">ไม่มีผู้สมัคร</p>';
+                    totalVotesElement.textContent = '0';
+                    return;
+                }
+                
+                const totalVotes = Object.values(this.currentElection.votes).reduce((sum, votes) => sum + votes, 0);
+                totalVotesElement.textContent = totalVotes;
+                
+                // Prepare all candidates and special votes for sorting
+                const resultsData = [
+                    ...this.currentElection.candidates.map(candidate => ({
+                        ...candidate,
+                        votes: this.currentElection.votes[candidate.id] || 0,
+                        type: 'candidate'
+                    })),
+                    {
+                        id: 'noVote',
+                        name: 'ไม่ประสงค์ลงคะแนน',
+                        votes: this.currentElection.votes.noVote || 0,
+                        type: 'special'
+                    },
+                    {
+                        id: 'spoiled',
+                        name: 'บัตรเสีย',
+                        votes: this.currentElection.votes.spoiled || 0,
+                        type: 'special'
+                    }
+                ];
+                
+                // Sort by votes (descending)
+                resultsData.sort((a, b) => b.votes - a.votes);
+                
+                // Calculate percentages
+                const resultsWithPercentages = resultsData.map(item => ({
+                    ...item,
+                    percentage: totalVotes > 0 ? ((item.votes / totalVotes * 100).toFixed(1)) : 0
+                }));
+                
+                // Find winner (if any candidate has votes)
+                const candidateResults = resultsData.filter(item => item.type === 'candidate');
+                const winner = candidateResults.length > 0 ? 
+                    candidateResults.reduce((prev, current) => (prev.votes > current.votes) ? prev : current) : 
+                    null;
+                
+                resultsArea.innerHTML = `
+                    <div class="space-y-3 md:space-y-4">
+                        ${resultsWithPercentages.map((item, index) => {
+                            const isWinner = winner && item.id === winner.id && item.votes > 0;
+                            const isSpecial = item.type === 'special';
+                            
+                            return `
+                                <div class="bg-gray-50 rounded-lg p-4 ${isWinner ? 'border-2 border-accent bg-yellow-50' : ''} ${isSpecial ? 'bg-blue-50' : ''}">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="flex items-center">
+                                            ${isWinner ? '<span class="text-xl md:text-2xl mr-2">🏆</span>' : ''}
+                                            ${item.type === 'candidate' ? 
+                                                `<span class="bg-primary text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-sm font-bold mr-3">
+                                                    ${item.number}
+                                                </span>` : 
+                                                `<span class="bg-blue-500 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-sm font-bold mr-3">
+                                                    ${item.id === 'noVote' ? '❌' : '⚠️'}
+                                                </span>`
+                                            }
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800 text-sm md:text-base">${item.name}</h5>
+                                                ${item.party ? `<p class="text-xs md:text-sm text-gray-600">${item.party}</p>` : ''}
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-lg md:text-xl font-bold text-primary">${item.votes}</span>
+                                            <span class="text-xs md:text-sm text-gray-600 ml-1">คะแนน</span>
+                                            <p class="text-xs md:text-sm text-gray-500">${item.percentage}%</p>
+                                        </div>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 md:h-3">
+                                        <div class="bg-primary h-2.5 md:h-3 rounded-full transition-all duration-500" 
+                                             style="width: ${item.percentage}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+            
+            getStatusText(status) {
+                const statusText = {
+                    'setup': 'เตรียมการ',
+                    'voting': 'กำลังลงคะแนน',
+                    'ended': 'สิ้นสุดแล้ว'
+                };
+                return statusText[status] || statusText['setup'];
+            }
+            
+            getStatusColor(status) {
+                const statusColors = {
+                    'setup': 'text-gray-600',
+                    'voting': 'text-green-600',
+                    'ended': 'text-blue-600'
+                };
+                return statusColors[status] || statusColors['setup'];
+            }
+        }
+        
+        // Global functions
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        // Initialize the system when page loads
+        let resultsDisplay;
+        document.addEventListener('DOMContentLoaded', () => {
+            resultsDisplay = new ResultsDisplay();
+        });
+    </script>
+</body>
+</html>

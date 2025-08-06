@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -13,7 +14,8 @@
                         primary: '#3B82F6',
                         secondary: '#10B981',
                         accent: '#F59E0B',
-                        danger: '#EF4444'
+                        danger: '#EF4444',
+                        warning: '#F97316'
                     }
                 }
             }
@@ -45,6 +47,12 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
@@ -54,64 +62,61 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <h1 class="text-2xl font-bold text-primary">🗳️ ระบบนับคะแนนเลือกตั้ง</h1>
+                        <h1 class="text-xl md:text-2xl font-bold text-primary">🗳️ ระบบนับคะแนนเลือกตั้ง</h1>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button id="newElectionBtn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md">
+                <div class="flex items-center">
+                    <button id="newElectionBtn" class="bg-primary hover:bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md text-sm md:text-base">
                         + สร้างการเลือกตั้งใหม่
                     </button>
                 </div>
             </div>
         </div>
     </nav>
-
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <main class="max-w-7xl mx-auto py-6 md:py-8 px-4 sm:px-6 lg:px-8">
         <!-- Welcome Section -->
-        <div id="welcomeSection" class="text-center mb-12 fade-in">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">ยินดีต้อนรับสู่ระบบนับคะแนนเลือกตั้ง</h2>
-            <p class="text-xl text-gray-600 mb-8">จัดการการเลือกตั้งและนับคะแนนแบบ Real-time</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div class="text-4xl mb-4">📊</div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">นับคะแนนแบบ Real-time</h3>
-                    <p class="text-gray-600">ติดตามผลคะแนนได้ทันทีที่มีการลงคะแนน</p>
+        <div id="welcomeSection" class="text-center mb-10 md:mb-12 fade-in">
+            <h2 class="text-2xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">ยินดีต้อนรับสู่ระบบนับคะแนนเลือกตั้ง</h2>
+            <p class="text-lg md:text-xl text-gray-600 mb-6 md:mb-8">จัดการการเลือกตั้งและนับคะแนนแบบ Real-time</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+                <div class="bg-white p-5 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">📊</div>
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-2">นับคะแนนแบบ Real-time</h3>
+                    <p class="text-sm md:text-base text-gray-600">ติดตามผลคะแนนได้ทันทีที่มีการลงคะแนน</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div class="text-4xl mb-4">👥</div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">จัดการผู้สมัคร</h3>
-                    <p class="text-gray-600">เพิ่ม แก้ไข และจัดการข้อมูลผู้สมัครได้ง่าย</p>
+                <div class="bg-white p-5 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">👥</div>
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-2">จัดการผู้สมัคร</h3>
+                    <p class="text-sm md:text-base text-gray-600">เพิ่ม แก้ไข และจัดการข้อมูลผู้สมัครได้ง่าย</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div class="text-4xl mb-4">🏛️</div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">หลายการเลือกตั้ง</h3>
-                    <p class="text-gray-600">สร้างและจัดการการเลือกตั้งหลายรายการพร้อมกัน</p>
+                <div class="bg-white p-5 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">🏛️</div>
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-2">หลายการเลือกตั้ง</h3>
+                    <p class="text-sm md:text-base text-gray-600">สร้างและจัดการการเลือกตั้งหลายรายการพร้อมกัน</p>
                 </div>
             </div>
         </div>
-
         <!-- Elections List -->
         <div id="electionsSection" class="mb-8">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6">การเลือกตั้งทั้งหมด</h3>
-            <div id="electionsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-5 md:mb-6">การเลือกตั้งทั้งหมด</h3>
+            <div id="electionsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 <!-- Elections will be dynamically loaded here -->
             </div>
-            <div id="noElections" class="text-center py-12 bg-white rounded-xl shadow-lg">
-                <div class="text-6xl mb-4">🗳️</div>
-                <h4 class="text-xl font-semibold text-gray-600 mb-2">ยังไม่มีการเลือกตั้ง</h4>
-                <p class="text-gray-500 mb-6">เริ่มต้นด้วยการสร้างการเลือกตั้งใหม่</p>
-                <button onclick="showCreateElectionModal()" class="bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+            <div id="noElections" class="text-center py-10 md:py-12 bg-white rounded-xl shadow-lg">
+                <div class="text-4xl md:text-6xl mb-3 md:mb-4">🗳️</div>
+                <h4 class="text-lg md:text-xl font-semibold text-gray-600 mb-2">ยังไม่มีการเลือกตั้ง</h4>
+                <p class="text-gray-500 mb-5 md:mb-6">เริ่มต้นด้วยการสร้างการเลือกตั้งใหม่</p>
+                <button onclick="showCreateElectionModal()" class="bg-primary hover:bg-blue-600 text-white px-5 py-2 md:px-6 md:py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 text-sm md:text-base">
                     สร้างการเลือกตั้งแรก
                 </button>
             </div>
         </div>
     </main>
-
     <!-- Create Election Modal -->
-    <div id="createElectionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-95">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6">สร้างการเลือกตั้งใหม่</h3>
+    <div id="createElectionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 modal-overlay">
+        <div class="bg-white rounded-xl p-6 md:p-8 max-w-md w-full mx-4 modal-content">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-5 md:mb-6">สร้างการเลือกตั้งใหม่</h3>
             <form id="createElectionForm">
                 <div class="mb-4">
                     <label for="electionName" class="block text-sm font-medium text-gray-700 mb-2">ชื่อการเลือกตั้ง</label>
@@ -119,99 +124,111 @@
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                            placeholder="เช่น การเลือกตั้งประธานนักเรียน 2567">
                 </div>
-                <div class="mb-6">
+                <div class="mb-5 md:mb-6">
                     <label for="electionDescription" class="block text-sm font-medium text-gray-700 mb-2">คำอธิบาย (ไม่บังคับ)</label>
                     <textarea id="electionDescription" name="electionDescription" rows="3"
                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                               placeholder="รายละเอียดเพิ่มเติมเกี่ยวกับการเลือกตั้ง"></textarea>
                 </div>
-                <div class="flex justify-end space-x-4">
+                <div class="flex justify-end space-x-3">
                     <button type="button" onclick="hideCreateElectionModal()" 
-                            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200">
+                            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200 text-sm md:text-base">
                         ยกเลิก
                     </button>
                     <button type="submit" 
-                            class="bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                            class="bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 text-sm md:text-base">
                         สร้างการเลือกตั้ง
                     </button>
                 </div>
             </form>
         </div>
     </div>
-
     <!-- Election Management Page -->
     <div id="electionManagementPage" class="hidden">
-        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto py-6 md:py-8 px-4 sm:px-6 lg:px-8">
             <!-- Header -->
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8 gap-4">
                 <div>
-                    <button onclick="showMainPage()" class="text-primary hover:text-blue-600 font-medium mb-2 transition-colors duration-200">
+                    <button onclick="showMainPage()" class="text-primary hover:text-blue-600 font-medium mb-2 transition-colors duration-200 text-sm md:text-base">
                         ← กลับหน้าหลัก
                     </button>
-                    <h2 id="currentElectionTitle" class="text-3xl font-bold text-gray-800"></h2>
-                    <p id="currentElectionDescription" class="text-gray-600 mt-2"></p>
+                    <h2 id="currentElectionTitle" class="text-2xl md:text-3xl font-bold text-gray-800"></h2>
+                    <p id="currentElectionDescription" class="text-gray-600 mt-2 text-sm md:text-base"></p>
                 </div>
-                <div class="flex space-x-4">
-                    <button id="addCandidateBtn" class="bg-secondary hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                <div class="flex flex-wrap gap-2 md:gap-4">
+                    <button id="addCandidateBtn" class="bg-secondary hover:bg-green-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 text-sm md:text-base">
                         + เพิ่มผู้สมัคร
                     </button>
-                    <button id="startVotingBtn" class="bg-accent hover:bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                    <button id="startVotingBtn" class="bg-accent hover:bg-yellow-500 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 text-sm md:text-base">
                         เริ่มการลงคะแนน
                     </button>
+                    <a id="viewResultsLink" href="#" target="_blank" 
+                       class="bg-primary hover:bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 text-sm md:text-base flex items-center">
+                        📊 ดูผลคะแนน
+                    </a>
                 </div>
             </div>
-
             <!-- Candidates Section -->
-            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">ผู้สมัครทั้งหมด</h3>
-                <div id="candidatesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white rounded-xl shadow-lg p-5 md:p-6 mb-6 md:mb-8">
+                <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-4">ผู้สมัครทั้งหมด</h3>
+                <div id="candidatesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     <!-- Candidates will be dynamically loaded here -->
                 </div>
-                <div id="noCandidates" class="text-center py-8">
-                    <div class="text-4xl mb-4">👤</div>
-                    <p class="text-gray-500 mb-4">ยังไม่มีผู้สมัคร</p>
-                    <button onclick="showAddCandidateModal()" class="bg-secondary hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200">
+                <div id="noCandidates" class="text-center py-6 md:py-8">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">👤</div>
+                    <p class="text-gray-500 mb-4 text-sm md:text-base">ยังไม่มีผู้สมัคร</p>
+                    <button onclick="showAddCandidateModal()" class="bg-secondary hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base">
                         เพิ่มผู้สมัครคนแรก
                     </button>
                 </div>
             </div>
-
             <!-- Voting Section -->
-            <div id="votingSection" class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">การลงคะแนน</h3>
+            <div id="votingSection" class="bg-white rounded-xl shadow-lg p-5 md:p-6">
+                <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-4">การลงคะแนน</h3>
                 <div id="votingArea" class="hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                        <div id="votingCandidates" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-5 md:mb-6">
+                        <div id="votingCandidates" class="grid grid-cols-1 gap-3 md:gap-4 md:col-span-3">
                             <!-- Voting candidates will be loaded here -->
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4 md:p-5">
+                            <h4 class="font-semibold text-gray-800 mb-3 md:mb-4">ตัวเลือกพิเศษ</h4>
+                            <div class="space-y-3">
+                                <button onclick="electionSystem.showVoteConfirmation('noVote')" 
+                                        class="w-full bg-warning hover:bg-orange-600 text-white py-2 px-3 rounded-lg font-medium transition-all duration-200 text-sm md:text-base">
+                                    ไม่ประสงค์ลงคะแนน
+                                </button>
+                                <button onclick="electionSystem.showVoteConfirmation('spoiled')" 
+                                        class="w-full bg-danger hover:bg-red-600 text-white py-2 px-3 rounded-lg font-medium transition-all duration-200 text-sm md:text-base">
+                                    บัตรเสีย
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="text-center">
-                        <button id="endVotingBtn" class="bg-danger hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200">
+                        <button id="endVotingBtn" class="bg-danger hover:bg-red-600 text-white px-5 py-2 md:px-6 md:py-3 rounded-lg font-medium transition-all duration-200 text-sm md:text-base">
                             สิ้นสุดการลงคะแนน
                         </button>
                     </div>
                 </div>
-                <div id="votingNotStarted" class="text-center py-8">
-                    <div class="text-4xl mb-4">⏳</div>
-                    <p class="text-gray-500 mb-4">การลงคะแนนยังไม่เริ่ม</p>
-                    <p class="text-sm text-gray-400">กดปุ่ม "เริ่มการลงคะแนน" เพื่อเริ่มต้น</p>
+                <div id="votingNotStarted" class="text-center py-6 md:py-8">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">⏳</div>
+                    <p class="text-gray-500 mb-4 text-sm md:text-base">การลงคะแนนยังไม่เริ่ม</p>
+                    <p class="text-xs md:text-sm text-gray-400">กดปุ่ม "เริ่มการลงคะแนน" เพื่อเริ่มต้น</p>
                 </div>
             </div>
-
             <!-- Results Section -->
-            <div id="resultsSection" class="bg-white rounded-xl shadow-lg p-6 mt-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">ผลคะแนน (Real-time)</h3>
+            <div id="resultsSection" class="bg-white rounded-xl shadow-lg p-5 md:p-6 mt-6 md:mt-8">
+                <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-4">ผลคะแนน (Real-time)</h3>
                 <div id="resultsArea">
                     <!-- Results will be displayed here -->
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Add Candidate Modal -->
-    <div id="addCandidateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-95">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6">เพิ่มผู้สมัคร</h3>
+    <div id="addCandidateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 modal-overlay">
+        <div class="bg-white rounded-xl p-6 md:p-8 max-w-md w-full mx-4 modal-content">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-5 md:mb-6">เพิ่มผู้สมัคร</h3>
             <form id="addCandidateForm">
                 <div class="mb-4">
                     <label for="candidateName" class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้สมัคร</label>
@@ -225,27 +242,667 @@
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
                            placeholder="เช่น 1, 2, 3">
                 </div>
-                <div class="mb-6">
+                <div class="mb-5 md:mb-6">
                     <label for="candidateParty" class="block text-sm font-medium text-gray-700 mb-2">พรรค/กลุ่ม (ไม่บังคับ)</label>
                     <input type="text" id="candidateParty" name="candidateParty"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
                            placeholder="ชื่อพรรคหรือกลุ่ม">
                 </div>
-                <div class="flex justify-end space-x-4">
+                <div class="flex justify-end space-x-3">
                     <button type="button" onclick="hideAddCandidateModal()" 
-                            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200">
+                            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200 text-sm md:text-base">
                         ยกเลิก
                     </button>
                     <button type="submit" 
-                            class="bg-secondary hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                            class="bg-secondary hover:bg-green-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 text-sm md:text-base">
                         เพิ่มผู้สมัคร
                     </button>
                 </div>
             </form>
         </div>
     </div>
-
-    <script src="script.js"></script>
+    <!-- Vote Confirmation Modal -->
+    <div id="voteConfirmationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 modal-overlay">
+        <div class="bg-white rounded-xl p-6 md:p-8 max-w-md w-full mx-4 modal-content">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">ยืนยันการลงคะแนน</h3>
+            <p id="voteConfirmationMessage" class="text-gray-700 mb-6 text-sm md:text-base"></p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancelVoteBtn" 
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200 text-sm md:text-base">
+                    ยกเลิก
+                </button>
+                <button id="confirmVoteBtn" 
+                        class="bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base">
+                    ยืนยัน
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Election System JavaScript
+        class ElectionSystem {
+            constructor() {
+                this.elections = JSON.parse(localStorage.getItem('elections')) || [];
+                this.currentElection = null;
+                this.votingActive = false;
+                this.pendingVote = null; // For vote confirmation
+                this.init();
+            }
+            
+            init() {
+                this.loadElections();
+                this.setupEventListeners();
+                this.showMainPage();
+            }
+            
+            setupEventListeners() {
+                // Main navigation
+                document.getElementById('newElectionBtn').addEventListener('click', () => {
+                    this.showCreateElectionModal();
+                });
+                
+                // Create election form
+                document.getElementById('createElectionForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.createElection();
+                });
+                
+                // Add candidate form
+                document.getElementById('addCandidateForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addCandidate();
+                });
+                
+                // Election management buttons
+                document.getElementById('addCandidateBtn').addEventListener('click', () => {
+                    this.showAddCandidateModal();
+                });
+                
+                document.getElementById('startVotingBtn').addEventListener('click', () => {
+                    this.startVoting();
+                });
+                
+                document.getElementById('endVotingBtn').addEventListener('click', () => {
+                    this.endVoting();
+                });
+                
+                // Vote confirmation modal
+                document.getElementById('cancelVoteBtn').addEventListener('click', () => {
+                    this.hideVoteConfirmation();
+                });
+                
+                document.getElementById('confirmVoteBtn').addEventListener('click', () => {
+                    this.confirmVote();
+                });
+            }
+            
+            // Election Management
+            createElection() {
+                const name = document.getElementById('electionName').value.trim();
+                const description = document.getElementById('electionDescription').value.trim();
+                
+                if (!name) {
+                    alert('กรุณาใส่ชื่อการเลือกตั้ง');
+                    return;
+                }
+                
+                const election = {
+                    id: Date.now().toString(),
+                    name: name,
+                    description: description,
+                    candidates: [],
+                    votes: {
+                        noVote: 0,
+                        spoiled: 0
+                    },
+                    status: 'setup', // setup, voting, ended
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.elections.push(election);
+                this.saveElections();
+                this.hideCreateElectionModal();
+                this.loadElections();
+                this.showNotification('สร้างการเลือกตั้งเรียบร้อยแล้ว', 'success');
+            }
+            
+            deleteElection(electionId) {
+                if (confirm('คุณแน่ใจหรือไม่ที่จะลบการเลือกตั้งนี้?')) {
+                    this.elections = this.elections.filter(e => e.id !== electionId);
+                    this.saveElections();
+                    this.loadElections();
+                    this.showNotification('ลบการเลือกตั้งเรียบร้อยแล้ว', 'success');
+                }
+            }
+            
+            openElection(electionId) {
+                this.currentElection = this.elections.find(e => e.id === electionId);
+                if (this.currentElection) {
+                    this.showElectionManagementPage();
+                }
+            }
+            
+            // Candidate Management
+            addCandidate() {
+                const name = document.getElementById('candidateName').value.trim();
+                const number = parseInt(document.getElementById('candidateNumber').value);
+                const party = document.getElementById('candidateParty').value.trim();
+                
+                if (!name || !number) {
+                    alert('กรุณาใส่ชื่อผู้สมัครและหมายเลข');
+                    return;
+                }
+                
+                // Check if candidate number already exists
+                if (this.currentElection.candidates.some(c => c.number === number)) {
+                    alert('หมายเลขผู้สมัครนี้มีอยู่แล้ว');
+                    return;
+                }
+                
+                const candidate = {
+                    id: Date.now().toString(),
+                    name: name,
+                    number: number,
+                    party: party || '',
+                    votes: 0
+                };
+                
+                this.currentElection.candidates.push(candidate);
+                this.currentElection.votes[candidate.id] = 0;
+                this.updateCurrentElection();
+                this.hideAddCandidateModal();
+                this.loadCandidates();
+                this.loadResults();
+                this.showNotification('เพิ่มผู้สมัครเรียบร้อยแล้ว', 'success');
+            }
+            
+            deleteCandidate(candidateId) {
+                if (confirm('คุณแน่ใจหรือไม่ที่จะลบผู้สมัครคนนี้?')) {
+                    this.currentElection.candidates = this.currentElection.candidates.filter(c => c.id !== candidateId);
+                    delete this.currentElection.votes[candidateId];
+                    this.updateCurrentElection();
+                    this.loadCandidates();
+                    this.loadResults();
+                    this.showNotification('ลบผู้สมัครเรียบร้อยแล้ว', 'success');
+                }
+            }
+            
+            // Voting System
+            startVoting() {
+                if (this.currentElection.candidates.length === 0) {
+                    alert('กรุณาเพิ่มผู้สมัครก่อนเริ่มการลงคะแนน');
+                    return;
+                }
+                
+                this.currentElection.status = 'voting';
+                this.votingActive = true;
+                this.updateCurrentElection();
+                this.loadVotingArea();
+                this.showNotification('เริ่มการลงคะแนนแล้ว', 'success');
+            }
+            
+            endVoting() {
+                if (confirm('คุณแน่ใจหรือไม่ที่จะสิ้นสุดการลงคะแนน?')) {
+                    this.currentElection.status = 'ended';
+                    this.votingActive = false;
+                    this.updateCurrentElection();
+                    this.loadVotingArea();
+                    this.showNotification('สิ้นสุดการลงคะแนนแล้ว', 'info');
+                }
+            }
+            
+            // Show vote confirmation modal for special votes
+            showVoteConfirmation(voteType) {
+                if (!this.votingActive || this.currentElection.status !== 'voting') {
+                    alert('การลงคะแนนไม่ได้เปิดอยู่');
+                    return;
+                }
+                
+                this.pendingVote = voteType;
+                
+                const messages = {
+                    'noVote': 'คุณแน่ใจหรือไม่ที่จะลงคะแนน "ไม่ประสงค์ลงคะแนน"?',
+                    'spoiled': 'คุณแน่ใจหรือไม่ที่จะลงคะแนน "บัตรเสีย"?'
+                };
+                
+                document.getElementById('voteConfirmationMessage').textContent = messages[voteType];
+                document.getElementById('voteConfirmationModal').classList.remove('hidden');
+                document.getElementById('voteConfirmationModal').classList.add('flex');
+            }
+            
+            // Confirm vote after modal for special votes and candidate votes
+            confirmVote() {
+                if (this.pendingVote === 'noVote') {
+                    // Handle "ไม่ประสงค์ลงคะแนน"
+                    this.currentElection.votes.noVote = (this.currentElection.votes.noVote || 0) + 1;
+                    this.updateCurrentElection();
+                    this.loadResults();
+                    this.loadVotingArea();
+                    this.showNotification("ลงคะแนน 'ไม่ประสงค์ลงคะแนน' เรียบร้อยแล้ว", "success");
+                } else if (this.pendingVote === 'spoiled') {
+                    // Handle "บัตรเสีย"
+                    this.currentElection.votes.spoiled = (this.currentElection.votes.spoiled || 0) + 1;
+                    this.updateCurrentElection();
+                    this.loadResults();
+                    this.loadVotingArea();
+                    this.showNotification("ลงคะแนน 'บัตรเสีย' เรียบร้อยแล้ว", "success");
+                } else if (this.pendingVote) {
+                    // Handle candidate vote (this.pendingVote is the candidateId)
+                    const candidateId = this.pendingVote;
+                    this.currentElection.votes[candidateId] = (this.currentElection.votes[candidateId] || 0) + 1;
+                    // Update candidate votes in the candidates array
+                    const candidateIndex = this.currentElection.candidates.findIndex(c => c.id === candidateId);
+                    if (candidateIndex !== -1) {
+                        this.currentElection.candidates[candidateIndex].votes = this.currentElection.votes[candidateId];
+                    }
+                    this.updateCurrentElection();
+                    this.loadResults();
+                    this.loadVotingArea();
+                    this.showNotification("ลงคะแนนเรียบร้อยแล้ว", "success");
+                }
+                
+                this.hideVoteConfirmation();
+            }
+            
+            // Vote for candidate - now shows confirmation
+            vote(candidateId) {
+                if (!this.votingActive || this.currentElection.status !== 'voting') {
+                    alert('การลงคะแนนไม่ได้เปิดอยู่');
+                    return;
+                }
+                
+                // Store the candidate ID for confirmation
+                this.pendingVote = candidateId;
+                
+                // Find the candidate to get their name
+                const candidate = this.currentElection.candidates.find(c => c.id === candidateId);
+                if (candidate) {
+                    document.getElementById('voteConfirmationMessage').textContent = 
+                        `คุณแน่ใจหรือไม่ที่จะลงคะแนนให้ "${candidate.name}"?`;
+                } else {
+                    document.getElementById('voteConfirmationMessage').textContent = 
+                        `คุณแน่ใจหรือไม่ที่จะลงคะแนนนี้?`;
+                }
+                
+                document.getElementById('voteConfirmationModal').classList.remove('hidden');
+                document.getElementById('voteConfirmationModal').classList.add('flex');
+            }
+            
+            // Hide vote confirmation modal
+            hideVoteConfirmation() {
+                document.getElementById('voteConfirmationModal').classList.add('hidden');
+                document.getElementById('voteConfirmationModal').classList.remove('flex');
+                this.pendingVote = null;
+            }
+            
+            // UI Management
+            showMainPage() {
+                document.getElementById('welcomeSection').style.display = 'block';
+                document.getElementById('electionsSection').style.display = 'block';
+                document.getElementById('electionManagementPage').style.display = 'none';
+                this.loadElections();
+            }
+            
+            showElectionManagementPage() {
+                document.getElementById('welcomeSection').style.display = 'none';
+                document.getElementById('electionsSection').style.display = 'none';
+                document.getElementById('electionManagementPage').style.display = 'block';
+                document.getElementById('currentElectionTitle').textContent = this.currentElection.name;
+                document.getElementById('currentElectionDescription').textContent = this.currentElection.description || 'ไม่มีคำอธิบาย';
+                
+                // Update the results link
+                const viewResultsLink = document.getElementById('viewResultsLink');
+                viewResultsLink.href = `results.html?electionId=${this.currentElection.id}`;
+                
+                this.loadCandidates();
+                this.loadVotingArea();
+                this.loadResults();
+            }
+            
+            showCreateElectionModal() {
+                document.getElementById('createElectionModal').classList.remove('hidden');
+                document.getElementById('createElectionModal').classList.add('flex');
+                document.getElementById('createElectionForm').reset();
+            }
+            
+            hideCreateElectionModal() {
+                document.getElementById('createElectionModal').classList.add('hidden');
+                document.getElementById('createElectionModal').classList.remove('flex');
+            }
+            
+            showAddCandidateModal() {
+                document.getElementById('addCandidateModal').classList.remove('hidden');
+                document.getElementById('addCandidateModal').classList.add('flex');
+                document.getElementById('addCandidateForm').reset();
+            }
+            
+            hideAddCandidateModal() {
+                document.getElementById('addCandidateModal').classList.add('hidden');
+                document.getElementById('addCandidateModal').classList.remove('flex');
+            }
+            
+            // Data Loading
+            loadElections() {
+                const electionsList = document.getElementById('electionsList');
+                const noElections = document.getElementById('noElections');
+                
+                if (this.elections.length === 0) {
+                    electionsList.style.display = 'none';
+                    noElections.style.display = 'block';
+                    return;
+                }
+                
+                electionsList.style.display = 'grid';
+                noElections.style.display = 'none';
+                
+                electionsList.innerHTML = this.elections.map(election => {
+                    const statusBadge = this.getStatusBadge(election.status);
+                    const candidateCount = election.candidates.length;
+                    const totalVotes = Object.values(election.votes).reduce((sum, votes) => sum + votes, 0);
+                    
+                    return `
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 p-5 md:p-6 border-l-4 border-primary">
+                            <div class="flex justify-between items-start mb-3 md:mb-4">
+                                <h4 class="text-base md:text-lg font-semibold text-gray-800">${election.name}</h4>
+                                ${statusBadge}
+                            </div>
+                            <p class="text-gray-600 mb-3 md:mb-4 text-sm">${election.description || 'ไม่มีคำอธิบาย'}</p>
+                            <div class="flex justify-between items-center text-xs md:text-sm text-gray-500 mb-3 md:mb-4">
+                                <span>ผู้สมัคร: ${candidateCount} คน</span>
+                                <span>คะแนนรวม: ${totalVotes} คะแนน</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-400">
+                                    สร้างเมื่อ: ${new Date(election.createdAt).toLocaleDateString('th-TH')}
+                                </span>
+                                <div class="flex space-x-2">
+                                    <button onclick="electionSystem.openElection('${election.id}')" 
+                                            class="bg-primary hover:bg-blue-600 text-white px-3 py-1 rounded text-xs md:text-sm font-medium transition-colors duration-200">
+                                        จัดการ
+                                    </button>
+                                    <button onclick="electionSystem.deleteElection('${election.id}')" 
+                                            class="bg-danger hover:bg-red-600 text-white px-3 py-1 rounded text-xs md:text-sm font-medium transition-colors duration-200">
+                                        ลบ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            loadCandidates() {
+                const candidatesList = document.getElementById('candidatesList');
+                const noCandidates = document.getElementById('noCandidates');
+                
+                if (this.currentElection.candidates.length === 0) {
+                    candidatesList.style.display = 'none';
+                    noCandidates.style.display = 'block';
+                    return;
+                }
+                
+                candidatesList.style.display = 'grid';
+                noCandidates.style.display = 'none';
+                
+                candidatesList.innerHTML = this.currentElection.candidates
+                    .sort((a, b) => a.number - b.number)
+                    .map(candidate => {
+                        const votes = this.currentElection.votes[candidate.id] || 0;
+                        return `
+                            <div class="bg-gray-50 rounded-lg p-4 border-2 border-gray-200 hover:border-secondary transition-colors duration-200">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex items-center">
+                                        <span class="bg-secondary text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-sm font-bold mr-3">
+                                            ${candidate.number}
+                                        </span>
+                                        <div>
+                                            <h5 class="font-semibold text-gray-800 text-sm md:text-base">${candidate.name}</h5>
+                                            ${candidate.party ? `<p class="text-xs md:text-sm text-gray-600">${candidate.party}</p>` : ''}
+                                        </div>
+                                    </div>
+                                    <button onclick="electionSystem.deleteCandidate('${candidate.id}')" 
+                                            class="text-danger hover:text-red-700 text-xs transition-colors duration-200">
+                                        ลบ
+                                    </button>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-base md:text-lg font-bold text-primary">${votes} คะแนน</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+            }
+            
+            loadVotingArea() {
+                const votingArea = document.getElementById('votingArea');
+                const votingNotStarted = document.getElementById('votingNotStarted');
+                const votingCandidates = document.getElementById('votingCandidates');
+                
+                if (this.currentElection.status === 'setup') {
+                    votingArea.style.display = 'none';
+                    votingNotStarted.style.display = 'block';
+                    return;
+                }
+                
+                votingArea.style.display = 'block';
+                votingNotStarted.style.display = 'none';
+                
+                if (this.currentElection.candidates.length === 0) {
+                    votingCandidates.innerHTML = '<p class="text-gray-500 text-center col-span-full">ไม่มีผู้สมัคร</p>';
+                    return;
+                }
+                
+                votingCandidates.innerHTML = this.currentElection.candidates
+                    .sort((a, b) => a.number - b.number)
+                    .map(candidate => {
+                        const votes = this.currentElection.votes[candidate.id] || 0;
+                        const isVotingActive = this.currentElection.status === 'voting';
+                        
+                        return `
+                            <div class="bg-white rounded-lg p-4 md:p-6 border-2 border-gray-200 hover:border-primary transition-all duration-200 text-center">
+                                <div class="mb-3 md:mb-4">
+                                    <div class="bg-primary text-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl font-bold mx-auto mb-2 md:mb-3">
+                                        ${candidate.number}
+                                    </div>
+                                    <h5 class="font-semibold text-gray-800 mb-1 text-sm md:text-base">${candidate.name}</h5>
+                                    ${candidate.party ? `<p class="text-xs md:text-sm text-gray-600 mb-2 md:mb-3">${candidate.party}</p>` : '<div class="mb-2 md:mb-3"></div>'}
+                                </div>
+                                <div class="mb-3 md:mb-4">
+                                    <span class="text-xl md:text-2xl font-bold text-primary">${votes}</span>
+                                    <p class="text-xs md:text-sm text-gray-600">คะแนน</p>
+                                </div>
+                                ${isVotingActive ? `
+                                    <button onclick="electionSystem.vote('${candidate.id}')" 
+                                            class="w-full bg-secondary hover:bg-green-600 text-white py-2 px-3 md:px-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 pulse-animation text-sm md:text-base">
+                                        ลงคะแนน
+                                    </button>
+                                ` : `
+                                    <div class="w-full bg-gray-300 text-gray-600 py-2 px-3 md:px-4 rounded-lg font-medium text-sm md:text-base">
+                                        ${this.currentElection.status === 'ended' ? 'การลงคะแนนสิ้นสุดแล้ว' : 'รอการเริ่มลงคะแนน'}
+                                    </div>
+                                `}
+                            </div>
+                        `;
+                    }).join('');
+            }
+            
+            loadResults() {
+                const resultsArea = document.getElementById('resultsArea');
+                
+                if (this.currentElection.candidates.length === 0) {
+                    resultsArea.innerHTML = '<p class="text-gray-500 text-center">ไม่มีผู้สมัคร</p>';
+                    return;
+                }
+                
+                const totalVotes = Object.values(this.currentElection.votes).reduce((sum, votes) => sum + votes, 0);
+                
+                // Prepare all candidates and special votes for sorting
+                const resultsData = [
+                    ...this.currentElection.candidates.map(candidate => ({
+                        ...candidate,
+                        votes: this.currentElection.votes[candidate.id] || 0,
+                        type: 'candidate'
+                    })),
+                    {
+                        id: 'noVote',
+                        name: 'ไม่ประสงค์ลงคะแนน',
+                        votes: this.currentElection.votes.noVote || 0,
+                        type: 'special'
+                    },
+                    {
+                        id: 'spoiled',
+                        name: 'บัตรเสีย',
+                        votes: this.currentElection.votes.spoiled || 0,
+                        type: 'special'
+                    }
+                ];
+                
+                // Sort by votes (descending)
+                resultsData.sort((a, b) => b.votes - a.votes);
+                
+                // Calculate percentages
+                const resultsWithPercentages = resultsData.map(item => ({
+                    ...item,
+                    percentage: totalVotes > 0 ? ((item.votes / totalVotes * 100).toFixed(1)) : 0
+                }));
+                
+                // Find winner (if any candidate has votes)
+                const candidateResults = resultsData.filter(item => item.type === 'candidate');
+                const winner = candidateResults.length > 0 ? 
+                    candidateResults.reduce((prev, current) => (prev.votes > current.votes) ? prev : current) : 
+                    null;
+                
+                resultsArea.innerHTML = `
+                    <div class="mb-5 md:mb-6">
+                        <div class="text-center mb-4">
+                            <span class="text-2xl md:text-3xl font-bold text-primary">${totalVotes}</span>
+                            <p class="text-gray-600 text-sm md:text-base">คะแนนรวมทั้งหมด</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3 md:space-y-4">
+                        ${resultsWithPercentages.map((item, index) => {
+                            const isWinner = winner && item.id === winner.id && item.votes > 0;
+                            const isSpecial = item.type === 'special';
+                            
+                            return `
+                                <div class="bg-gray-50 rounded-lg p-4 ${isWinner ? 'border-2 border-accent bg-yellow-50' : ''} ${isSpecial ? 'bg-blue-50' : ''}">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="flex items-center">
+                                            ${isWinner ? '<span class="text-xl md:text-2xl mr-2">🏆</span>' : ''}
+                                            ${item.type === 'candidate' ? 
+                                                `<span class="bg-primary text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-sm font-bold mr-3">
+                                                    ${item.number}
+                                                </span>` : 
+                                                `<span class="bg-blue-500 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-sm font-bold mr-3">
+                                                    ${item.id === 'noVote' ? '❌' : '⚠️'}
+                                                </span>`
+                                            }
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800 text-sm md:text-base">${item.name}</h5>
+                                                ${item.party ? `<p class="text-xs md:text-sm text-gray-600">${item.party}</p>` : ''}
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-lg md:text-xl font-bold text-primary">${item.votes}</span>
+                                            <span class="text-xs md:text-sm text-gray-600 ml-1">คะแนน</span>
+                                            <p class="text-xs md:text-sm text-gray-500">${item.percentage}%</p>
+                                        </div>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 md:h-3">
+                                        <div class="bg-primary h-2.5 md:h-3 rounded-full transition-all duration-500" 
+                                             style="width: ${item.percentage}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+            
+            // Utility Functions
+            getStatusBadge(status) {
+                const badges = {
+                    'setup': '<span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">เตรียมการ</span>',
+                    'voting': '<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">กำลังลงคะแนน</span>',
+                    'ended': '<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">สิ้นสุดแล้ว</span>'
+                };
+                return badges[status] || badges['setup'];
+            }
+            
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                const colors = {
+                    'success': 'bg-green-500',
+                    'error': 'bg-red-500',
+                    'info': 'bg-blue-500',
+                    'warning': 'bg-yellow-500'
+                };
+                
+                notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-5 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full text-sm md:text-base`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-full');
+                }, 100);
+                
+                // Animate out and remove
+                setTimeout(() => {
+                    notification.classList.add('translate-x-full');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            
+            updateCurrentElection() {
+                const index = this.elections.findIndex(e => e.id === this.currentElection.id);
+                if (index !== -1) {
+                    this.elections[index] = this.currentElection;
+                    this.saveElections();
+                }
+            }
+            
+            saveElections() {
+                localStorage.setItem('elections', JSON.stringify(this.elections));
+            }
+        }
+        
+        // Global functions for HTML onclick events
+        function showCreateElectionModal() {
+            electionSystem.showCreateElectionModal();
+        }
+        
+        function hideCreateElectionModal() {
+            electionSystem.hideCreateElectionModal();
+        }
+        
+        function showAddCandidateModal() {
+            electionSystem.showAddCandidateModal();
+        }
+        
+        function hideAddCandidateModal() {
+            electionSystem.hideAddCandidateModal();
+        }
+        
+        function showMainPage() {
+            electionSystem.showMainPage();
+        }
+        
+        // Initialize the system when page loads
+        let electionSystem;
+        document.addEventListener('DOMContentLoaded', () => {
+            electionSystem = new ElectionSystem();
+        });
+        
+        // Auto-refresh results every 2 seconds when voting is active
+        setInterval(() => {
+            if (electionSystem && electionSystem.currentElection && electionSystem.currentElection.status === 'voting') {
+                electionSystem.loadResults();
+                electionSystem.loadVotingArea();
+            }
+        }, 2000);
+    </script>
 </body>
 </html>
-
