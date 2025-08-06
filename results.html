@@ -156,10 +156,7 @@
                 }
                 
                 // Display election info
-                document.getElementById('electionTitle').textContent = this.currentElection.name;
-                document.getElementById('electionDescription').textContent = this.currentElection.description || 'ไม่มีคำอธิบาย';
-                document.getElementById('electionStatus').textContent = this.getStatusText(this.currentElection.status);
-                document.getElementById('electionStatus').className = `text-sm font-semibold ${this.getStatusColor(this.currentElection.status)}`;
+                this.displayElectionInfo();
                 
                 // Load initial results
                 this.loadResults();
@@ -167,8 +164,18 @@
                 // Auto-refresh results every 2 seconds
                 setInterval(() => {
                     this.refreshData();
+                    this.displayElectionInfo();
                     this.loadResults();
                 }, 2000);
+            }
+            
+            displayElectionInfo() {
+                if (!this.currentElection) return;
+                
+                document.getElementById('electionTitle').textContent = this.currentElection.name;
+                document.getElementById('electionDescription').textContent = this.currentElection.description || 'ไม่มีคำอธิบาย';
+                document.getElementById('electionStatus').textContent = this.getStatusText(this.currentElection.status);
+                document.getElementById('electionStatus').className = `text-sm font-semibold ${this.getStatusColor(this.currentElection.status)}`;
             }
             
             refreshData() {
